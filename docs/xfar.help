@@ -1,0 +1,114 @@
+XFAR
+====
+
+DEFAULT BINDINGS
+-----------------
+  Super+D                      Open the launcher
+  Super+Right / Super+Left     Grow / shrink the focused column
+  Super+Up / Super+Down        Grow / shrink the focused window's height
+  Super+Space                  Cycle windows through grid slots
+  Super+Q                      Close the focused window
+  Super+Shift+Q                Quit xfar
+  Super+N                      Create and switch to a workspace
+  Super+Tab / Super+Shift+Tab  Switch to the next / previous workspace
+  Super+Shift+Right            Move the focused window to the next workspace
+  Super+Shift+Left             Move the focused window to the previous workspace
+  Alt+Tab                      Cycle tiled windows; release Alt to focus
+
+Desktop bindings are configurable under [keybindings]. Alt+Tab is fixed.
+
+LAYOUT
+------
+  Tiled toplevels use a balanced grid with ceil(sqrt(n)) columns and
+  full-height column strips. Dialogs, modal toplevels, and fixed-size
+  toplevels float centered. Fullscreen toplevels cover the output and hide
+  the bar.
+
+  [tiling] max_columns and max_rows set per-workspace capacity. A new tiled
+  window that would exceed capacity moves to the next workspace only when it
+  already exists; otherwise the current grid grows past the configured limit.
+  min_width and min_height clamp divider movement.
+
+  Workspaces are created at runtime. Empty inactive workspaces are retired.
+
+CONFIGURATION
+-------------
+  Path: $XDG_CONFIG_HOME/xfar/config.toml
+        ~/.config/xfar/config.toml when XDG_CONFIG_HOME is unset or empty
+
+  Every field is optional. Unknown sections and keys are rejected. On the
+  nested backend, malformed files are reported and xfar falls back to defaults.
+
+  [keyboard]
+  repeat_delay_ms = 200
+  repeat_rate = 25
+
+  [keybindings]
+  launcher = "Super+D"
+  grow_width = "Super+Right"
+  shrink_width = "Super+Left"
+  grow_height = "Super+Up"
+  shrink_height = "Super+Down"
+  cycle = "Super+Space"
+  close = "Super+Q"
+  quit = "Super+Shift+Q"
+  new_workspace = "Super+N"
+  next_workspace = "Super+Tab"
+  prev_workspace = "Super+Shift+Tab"
+  move_to_next_workspace = "Super+Shift+Right"
+  move_to_prev_workspace = "Super+Shift+Left"
+
+  [appearance]
+  Color keys: background, panel, accent, text, placeholder,
+              vdesktop_active, vdesktop, clock, switch_border
+  Color format: "#rrggbb" or "#rrggbbaa"
+  background_image = "/path/to/image"
+  background_mode = "fit"    stretch | fit | center | tile
+  panel_position = "top"     top | bottom
+
+  Relative wallpaper paths resolve from xfar's working directory.
+
+  [window]
+  focus_new = true
+
+  [tiling]
+  min_width = 320
+  min_height = 240
+  max_columns = 3
+  max_rows = 3
+
+  [cursor]
+  visible = true
+
+  [screenshot]
+  dir = "~/screenshots"
+
+  [session]
+  keep_state = true
+
+  Session state is stored at $XDG_STATE_HOME/xfar/session.toml, or
+  ~/.local/state/xfar/session.toml when XDG_STATE_HOME is unset or empty.
+
+  Wallpapers are rasterized per output size and cached under
+  $XDG_CACHE_HOME/xfar (usually ~/.cache/xfar). xfar validate checks the file
+  without rewriting it.
+
+RUNTIME
+-------
+  The default build uses the nested winit backend inside an existing X11 or
+  Wayland session. A build with --features tty uses DRM/KMS, GBM, libinput,
+  and libseat when neither WAYLAND_DISPLAY nor DISPLAY is set.
+
+  The DRM/KMS backend requires seatd, a TTY, and /dev/dri. Screenshot capture
+  is available only on this backend.
+
+  XFAR_TERMINAL selects the terminal used to page help and validation output.
+  The default is foot.
+
+BUILT-IN COMMANDS
+-----------------
+  xfar.help        Page this manual
+  xfar.settings    Edit the effective configuration; Ctrl+S saves
+  xfar.validate    Page xfar validate output
+  xfar.screenshot  Capture the composed output (DRM/KMS only)
+  xfar.quit        Quit xfar

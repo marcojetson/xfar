@@ -1,0 +1,7 @@
+# Pins the Rust toolchain so builds are identical on the macOS host and in the
+# Linux VM. Bump this deliberately (it is a reproducibility contract, not a
+# floating "stable"). rustup reads this file automatically.
+[toolchain]
+channel = "1.98.1"
+components = ["rustfmt", "clippy"]
+profile = "minimal"

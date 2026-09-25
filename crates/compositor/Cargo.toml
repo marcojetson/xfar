@@ -1,0 +1,45 @@
+[package]
+name = "xfar-compositor"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description.workspace = true
+
+[[bin]]
+name = "xfar"
+path = "src/main.rs"
+
+[features]
+# Bare-TTY DRM/KMS backend for real hardware. Build with:
+# `cargo build --features tty`.
+tty = [
+    "smithay/backend_drm",
+    "smithay/backend_gbm",
+    "smithay/backend_egl",
+    "smithay/backend_libinput",
+    "smithay/backend_session_libseat",
+    "smithay/backend_udev",
+]
+
+[dependencies]
+# Wayland compositor framework.
+smithay = { version = "0.7", default-features = false, features = [
+    "wayland_frontend",
+    "backend_winit",
+    "renderer_gl",
+    "desktop",
+] }
+# Structured logging (smithay also emits via tracing).
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+# Clean shutdown on SIGINT/SIGTERM.
+signal-hook = "0.3"
+# Glyph rasterization for on-screen text (launcher, indicators).
+fontdue = "0.9"
+# Local wall-clock time for the panel clock.
+libc = "0.2"
+# User configuration file (TOML) + deserialization.
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"
+# Wallpaper decoding for all backends; PNG screenshot encoding for the DRM backend.
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }

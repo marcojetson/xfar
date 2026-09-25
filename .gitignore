@@ -1,0 +1,9 @@
+# Rust build artifacts
+/target
+**/*.rs.bk
+
+# macOS
+.DS_Store
+
+# Cargo.lock is committed: this is a single binary workspace, and pinning the
+# lock keeps builds reproducible.
